@@ -7,9 +7,9 @@ async function bootstrap() {
 
   // Enable CORS to allow specific origins and methods
   app.enableCors({
-    origin: ['http://localhost:3001', 'https://todo-app-tau-opal.vercel.app'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization',
+    origin: '*', // Allow all domains
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Allow all methods
+    allowedHeaders: '*', // Allow all headers
     credentials: true,
   });
 
