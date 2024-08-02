@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { AbstractEntity } from '../database/abstract.entity';
+import { Todo } from '../todo/todo.entity';
 
 @Entity('app_user')
 export class AppUser extends AbstractEntity<AppUser> {
@@ -8,4 +9,7 @@ export class AppUser extends AbstractEntity<AppUser> {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Todo, (todo) => todo.user)
+  todos: Todo[]; // Collection of TODO items associated with this user
 }

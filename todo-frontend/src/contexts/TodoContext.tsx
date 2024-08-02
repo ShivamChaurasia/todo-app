@@ -31,6 +31,7 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const addTodo = async (title: string) => {
+    console.log('addTodo', title);
     const response = await axios.post('/todos', { title });
     setTodos([...todos, response.data]);
   };
