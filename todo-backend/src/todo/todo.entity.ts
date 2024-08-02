@@ -11,5 +11,5 @@ export class Todo extends AbstractEntity<Todo> {
   completed: boolean;
 
   @ManyToOne(() => AppUser, (user) => user.todos, { eager: false })
-  user: AppUser; // Reference to the user who owns this TODO
+  user: AppUser; // Reference to the user who owns this todo
 }

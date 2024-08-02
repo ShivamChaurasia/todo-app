@@ -31,7 +31,6 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const addTodo = async (title: string) => {
-    console.log('addTodo', title);
     const response = await axios.post('/todos', { title });
     setTodos([...todos, response.data]);
   };
@@ -39,7 +38,8 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
   const toggleTodo = async (id: number) => {
     const todo = todos.find((todo) => todo.id === id);
     if (todo) {
-      const response = await axios.patch(`/todos/${id}`, {
+      const response = await axios.put(`/todos/${id}`, {
+        ...todo,
         completed: !todo.completed,
       });
       setTodos(todos.map((t) => (t.id === id ? response.data : t)));

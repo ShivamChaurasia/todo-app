@@ -1,15 +1,25 @@
 import React, { useContext, useState } from 'react';
 import { TodoContext } from '../contexts/TodoContext';
+import Button from './Button';
+import toast from 'react-hot-toast';
 
 const TodoForm: React.FC = () => {
   const { addTodo } = useContext(TodoContext);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newTodo, setNewTodo] = useState('');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newTodo.trim()) {
-      await addTodo(newTodo);
-      setNewTodo('');
+      setIsLoading(true);
+      try {
+        await addTodo(newTodo);
+        setNewTodo('');
+      } catch (err) {
+        toast.error('Failed to create todo');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -22,12 +32,7 @@ const TodoForm: React.FC = () => {
         placeholder="Enter new todo"
         className="w-full p-2 border border-gray-300 rounded mb-2"
       />
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-      >
-        Add Todo
-      </button>
+      <Button type="submit" isLoading={isLoading} text="Add Todo" />
     </form>
   );
 };

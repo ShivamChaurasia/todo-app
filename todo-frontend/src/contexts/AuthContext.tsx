@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useMemo,
+  ReactNode,
+} from 'react';
 import axios from '../lib/axios';
 
 interface AuthContextProps {
@@ -58,9 +64,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUser(null);
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout, signup }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const values = useMemo(() => ({ user, login, logout, signup }), [user]);
+
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

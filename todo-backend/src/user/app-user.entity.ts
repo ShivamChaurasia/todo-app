@@ -11,5 +11,5 @@ export class AppUser extends AbstractEntity<AppUser> {
   password: string;
 
   @OneToMany(() => Todo, (todo) => todo.user)
-  todos: Todo[]; // Collection of TODO items associated with this user
+  todos: Todo[]; // Collection of todo items associated with this user
 }

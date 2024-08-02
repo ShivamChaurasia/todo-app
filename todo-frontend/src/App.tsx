@@ -10,12 +10,14 @@ import { Toaster } from 'react-hot-toast';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Topbar from './components/Topbar';
 
 const App: React.FC = () => {
   const { user } = React.useContext(AuthContext);
 
   return (
     <>
+      <Topbar />
       <Router>
         <Routes>
           <Route
