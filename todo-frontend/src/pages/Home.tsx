@@ -36,7 +36,10 @@ const Home: React.FC = () => {
         </form>
         <ul className="list-disc pl-5">
           {todos.map((todo) => (
-            <li key={todo.id} className="flex items-center justify-between mb-2">
+            <li
+              key={todo.id}
+              className="flex items-center justify-between mb-2"
+            >
               <span
                 className={`cursor-pointer ${todo.completed ? 'line-through text-gray-500' : ''}`}
                 onClick={() => toggleTodo(todo.id)}
@@ -45,7 +48,7 @@ const Home: React.FC = () => {
               </span>
               <button
                 onClick={() => deleteTodo(todo.id)}
-                className="text-red-500 hover:text-red-700"
+                className="text-rose-500 hover:text-rose-700"
               >
                 Delete
               </button>
@@ -54,7 +57,7 @@ const Home: React.FC = () => {
         </ul>
         <button
           onClick={logout}
-          className="w-full bg-red-500 text-white p-2 rounded mt-4 hover:bg-red-600"
+          className="w-full bg-rose-600 text-white p-2 rounded mt-4 hover:bg-rose-700"
         >
           Logout
         </button>

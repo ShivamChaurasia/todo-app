@@ -16,7 +16,9 @@ export const TodoContext = createContext<TodoContextProps>({
   deleteTodo: () => {},
 });
 
-export const TodoProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const TodoProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
@@ -34,16 +36,18 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const toggleTodo = async (id: number) => {
-    const todo = todos.find(todo => todo.id === id);
+    const todo = todos.find((todo) => todo.id === id);
     if (todo) {
-      const response = await axios.patch(`/todos/${id}`, { completed: !todo.completed });
-      setTodos(todos.map(t => (t.id === id ? response.data : t)));
+      const response = await axios.patch(`/todos/${id}`, {
+        completed: !todo.completed,
+      });
+      setTodos(todos.map((t) => (t.id === id ? response.data : t)));
     }
   };
 
   const deleteTodo = async (id: number) => {
     await axios.delete(`/todos/${id}`);
-    setTodos(todos.filter(todo => todo.id !== id));
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (

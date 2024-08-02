@@ -1,9 +1,17 @@
-import React, { useState, useEffect, useContext, ChangeEvent, FormEvent } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  ChangeEvent,
+  FormEvent,
+} from 'react';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 import InputField from '../components/InputField';
 import { AuthContext } from '../contexts/AuthContext';
+import AppLogo from '../components/AppLogo';
 
 const Signup: React.FC = () => {
-  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -14,10 +22,6 @@ const Signup: React.FC = () => {
   const checkEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-  };
-
-  const handleNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setName(event.target.value);
   };
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -36,29 +40,27 @@ const Signup: React.FC = () => {
     try {
       await signup(email, password);
     } catch (err) {
-      console.error(err);
+      const statusCode = (err as AxiosError).response?.status;
+      if (statusCode === 409) {
+        toast.error('Email already exists');
+      } else {
+        toast.error('Something went wrong');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    setIsDisabled(!(name && isEmailValid && password));
-  }, [name, isEmailValid, password]);
+    setIsDisabled(!(isEmailValid && password));
+  }, [isEmailValid, password]);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="bg-white p-12 rounded-3xl shadow-md lg:w-[500px]">
-        <h2 className="text-2xl mb-4">Sign Up</h2>
+        <AppLogo />
+        <h2 className="text-2xl mb-6 text-center">Sign Up</h2>
         <form onSubmit={handleSubmit}>
-          <InputField
-            id="name"
-            label="Name"
-            type="text"
-            value={name}
-            onChange={handleNameChange}
-            placeholder="Enter your name"
-          />
           <InputField
             id="email"
             label="Email"
@@ -76,19 +78,21 @@ const Signup: React.FC = () => {
             onChange={handlePasswordChange}
             placeholder="Enter your password"
           />
-          <button
-            type="submit"
-            className={`w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 ${isDisabled || isLoading ? 'opacity-65' : ''}`}
-            disabled={isDisabled || isLoading}
-          >
-            {isLoading ? 'Signing Up...' : 'Sign Up'}
-          </button>
-          <span className="block text-center mt-2 text-sm text-gray-600">
-            Already have an account?{' '}
-            <a href="/login" className="text-blue-600 hover:text-blue-800">
-              Sign In
-            </a>
-          </span>
+          <div className="flex items-center justify-between flex-col gap-2">
+            <button
+              type="submit"
+              className={`w-full bg-rose-600 text-white py-2 px-4 rounded hover:bg-rose-700 ${isDisabled || isLoading ? 'opacity-65' : ''}`}
+              disabled={isDisabled || isLoading}
+            >
+              {isLoading ? 'Signing Up...' : 'Sign Up'}
+            </button>
+            <span className="block text-center mt-2 text-sm text-gray-600">
+              Already have an account?{' '}
+              <a href="/login" className="text-blue-600 hover:text-blue-800">
+                Sign In
+              </a>
+            </span>
+          </div>
         </form>
       </div>
     </div>
