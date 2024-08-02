@@ -21,10 +21,21 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    try {
+      // Validate user credentials
+      const userFound = await this.validateUser(user.email, user.password);
+      if (!userFound) {
+        throw new Error('Invalid credentials');
+      }
+
+      // Generate JWT token if user is valid
+      const payload = { email: user.email, sub: user.userId };
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    } catch (error) {
+      throw new Error('Login failed');
+    }
   }
 
   async signup(email: string, password: string): Promise<any> {
