@@ -4,7 +4,6 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 // import { TodoModule } from './todo/todo.module';
-import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { TodoModule } from './todo/todo.module';
     UserModule,
     AuthModule,
     DatabaseModule,
-    TodoModule,
     // TodoModule,
   ],
 })
