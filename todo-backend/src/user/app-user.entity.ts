@@ -10,6 +10,9 @@ export class AppUser extends AbstractEntity<AppUser> {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  refreshToken?: string;
+
   @OneToMany(() => Todo, (todo) => todo.user)
   todos: Todo[]; // Collection of todo items associated with this user
 }

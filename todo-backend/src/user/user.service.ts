@@ -29,4 +29,19 @@ export class UserService {
     });
     return this.userRepository.save(newUser);
   }
+
+  async findByRefreshToken(refreshToken: string): Promise<AppUser | undefined> {
+    return this.userRepository.findOne({ where: { refreshToken } });
+  }
+
+  async updateRefreshToken(
+    userId: number,
+    refreshToken: string,
+  ): Promise<void> {
+    await this.userRepository.update(userId, { refreshToken });
+  }
+
+  async clearRefreshToken(userId: number): Promise<void> {
+    await this.userRepository.update(userId, { refreshToken: null });
+  }
 }

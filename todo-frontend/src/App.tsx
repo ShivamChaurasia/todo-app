@@ -11,13 +11,15 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Topbar from './components/Topbar';
+import Spinner from './components/Spinner';
 
 const App: React.FC = () => {
-  const { user } = React.useContext(AuthContext);
+  const { user, loading } = React.useContext(AuthContext);
 
   return (
     <>
       <Topbar />
+      {loading && <Spinner />}
       <Router>
         <Routes>
           <Route

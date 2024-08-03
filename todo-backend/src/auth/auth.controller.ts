@@ -28,9 +28,24 @@ export class AuthController {
     return this.authService.signup(signupDto.email, signupDto.password);
   }
 
+  @Post('refresh-token')
+  async refreshToken(@Body() refreshTokenDto: { refreshToken: string }) {
+    return this.authService.refreshToken(refreshTokenDto.refreshToken);
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Get('verify-token')
   async verifyToken(@Request() req) {
-    return req.user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...user } = req.user;
+    return user;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('logout')
+  async logout(@Request() req) {
+    const userId = req.user.id;
+    await this.authService.logout(userId);
+    return { message: 'Logged out successfully' };
   }
 }

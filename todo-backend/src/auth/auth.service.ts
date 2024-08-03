@@ -1,8 +1,13 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UserDto } from '../user/user-dto';
-import * as bcrypt from 'bcrypt';
+import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -28,24 +33,36 @@ export class AuthService {
   async login(
     email: string,
     password: string,
-  ): Promise<{ access_token: string } | null> {
+  ): Promise<{ accessToken: string; refreshToken: string } | null> {
     // Validate user credentials
     const user = await this.validateUser(email, password);
     if (!user) {
       throw new Error('Invalid credentials');
     }
 
-    // Generate JWT token if user is valid
-    const payload = { email: user.email, sub: user.id };
+    // Generate access and refresh tokens
+    const accessToken = this.jwtService.sign(
+      { userId: user.id },
+      { expiresIn: '1h' },
+    );
+    const refreshToken = this.jwtService.sign(
+      { userId: user.id },
+      { expiresIn: '30d' },
+    );
+
+    // Save refresh token to user
+    await this.userService.updateRefreshToken(user.id, refreshToken);
+
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken,
+      refreshToken,
     };
   }
 
   async signup(
     email: string,
     password: string,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ accessToken: string }> {
     // Check if user already exists
     const existingUser = await this.userService.findOneByEmail(email);
     if (existingUser) {
@@ -58,5 +75,30 @@ export class AuthService {
 
     // Generate JWT token for the newly created user
     return this.login(email, password);
+  }
+
+  async refreshToken(refreshToken: string): Promise<{
+    accessToken: string;
+    refreshToken: string;
+  }> {
+    const user = await this.userService.findByRefreshToken(refreshToken);
+    if (!user) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    // Generate new tokens
+    const payload: JwtPayload = { email: user.email };
+    const newAccessToken = this.jwtService.sign(payload);
+    const newRefreshToken = this.jwtService.sign(payload, { expiresIn: '30d' });
+
+    // Update tokens in the database
+    await this.userService.updateRefreshToken(user.id, newRefreshToken);
+
+    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  }
+
+  async logout(userId: number) {
+    // Clear refresh token for the user
+    await this.userService.clearRefreshToken(userId);
   }
 }

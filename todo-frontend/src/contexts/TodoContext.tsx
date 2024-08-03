@@ -1,4 +1,11 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useMemo,
+  useCallback,
+} from 'react';
 import axios from '../lib/axios';
 import { Todo } from '../types/todo';
 
@@ -32,28 +39,34 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
 
   const addTodo = async (title: string) => {
     const response = await axios.post('/todos', { title });
-    setTodos([...todos, response.data]);
+    setTodos((prevTodos) => [...prevTodos, response.data]);
   };
 
-  const toggleTodo = async (id: number) => {
-    const todo = todos.find((todo) => todo.id === id);
-    if (todo) {
-      const response = await axios.put(`/todos/${id}`, {
-        ...todo,
-        completed: !todo.completed,
-      });
-      setTodos(todos.map((t) => (t.id === id ? response.data : t)));
-    }
-  };
+  const toggleTodo = useCallback(
+    async (id: number) => {
+      const todo = todos.find((todo) => todo.id === id);
+      if (todo) {
+        const response = await axios.put(`/todos/${id}`, {
+          ...todo,
+          completed: !todo.completed,
+        });
+        setTodos((prevTodos) =>
+          prevTodos.map((t) => (t.id === id ? response.data : t)),
+        );
+      }
+    },
+    [todos],
+  );
 
   const deleteTodo = async (id: number) => {
     await axios.delete(`/todos/${id}`);
-    setTodos(todos.filter((todo) => todo.id !== id));
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
-  return (
-    <TodoContext.Provider value={{ todos, addTodo, toggleTodo, deleteTodo }}>
-      {children}
-    </TodoContext.Provider>
+  const values = useMemo(
+    () => ({ todos, addTodo, toggleTodo, deleteTodo }),
+    [todos, toggleTodo],
   );
+
+  return <TodoContext.Provider value={values}>{children}</TodoContext.Provider>;
 };

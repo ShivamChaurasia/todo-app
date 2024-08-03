@@ -8,6 +8,7 @@ import React, {
 import axios from '../lib/axios';
 
 interface AuthContextProps {
+  loading: boolean;
   user: any;
   login: (email: string, password: string) => Promise<void>;
   signup: (username: string, password: string) => Promise<void>;
@@ -15,6 +16,7 @@ interface AuthContextProps {
 }
 
 export const AuthContext = createContext<AuthContextProps>({
+  loading: false,
   user: null,
   login: async () => {},
   signup: async () => {},
@@ -25,12 +27,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const verifyToken = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       if (token) {
         try {
+          setLoading(true);
           const response = await axios.get('/auth/verify-token', {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -39,7 +43,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           setUser(response.data);
         } catch (error) {
           console.error('Token verification failed:', error);
-          localStorage.removeItem('token');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -49,22 +56,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     const response = await axios.post('/auth/login', { email, password });
-    localStorage.setItem('token', response.data.access_token);
+    localStorage.setItem('accessToken', response.data.accessToken);
+    localStorage.setItem('refreshToken', response.data.refreshToken);
     setUser({ email });
   };
 
   const signup = async (email: string, password: string) => {
     const response = await axios.post('/auth/signup', { email, password });
-    localStorage.setItem('token', response.data.access_token);
+    localStorage.setItem('accessToken', response.data.accessToken);
+    localStorage.setItem('refreshToken', response.data.refreshToken);
     setUser({ email });
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = async () => {
+    await axios.post('/auth/logout');
     setUser(null);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   };
 
-  const values = useMemo(() => ({ user, login, logout, signup }), [user]);
+  const values = useMemo(
+    () => ({ user, loading, login, logout, signup }),
+    [user, loading],
+  );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
