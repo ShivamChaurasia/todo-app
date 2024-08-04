@@ -9,6 +9,12 @@ This project is a full-stack Todo application with a React frontend and a NestJS
 
 > **Note:** Since the backend is deployed on a free service, the instance may spin down with periods of inactivity. This can result in initial request delays of 50 seconds or more.
 
+## Screenshots
+
+<img width="1436" alt="image" src="https://github.com/user-attachments/assets/b19138f3-984a-4a98-a747-0ca62c5828d9">
+<img width="1435" alt="image" src="https://github.com/user-attachments/assets/edcbd2fd-3a04-44a0-9619-62c8fe112d52">
+
+
 
 ## Project Structure
 
