@@ -12,9 +12,7 @@ This project is a full-stack Todo application with a React frontend and a NestJS
 ## Screenshots
 
 <img width="1436" alt="image" src="https://github.com/user-attachments/assets/b19138f3-984a-4a98-a747-0ca62c5828d9">
-<img width="1435" alt="image" src="https://github.com/user-attachments/assets/edcbd2fd-3a04-44a0-9619-62c8fe112d52">
-
-
+<img width="1435" alt="image" src="https://github.com/user-attachments/assets/edcbd2fd-3a04-44a0-9619-62c8fe112d52"
 
 ## Project Structure
 
@@ -32,6 +30,28 @@ This project is a full-stack Todo application with a React frontend and a NestJS
   - RESTful API for todo management.
   - User authentication with JWT.
   - Secure and efficient data handling with TypeORM.
+
+### API Documentation
+
+API documentation is provided using Swagger. You can view the API documentation at: https://todo-app-kszp.onrender.com/api
+
+-   Swagger UI
+
+**Endpoints**:
+
+-   **Authentication**
+
+    -   `POST /auth/login`: Authenticate a user and obtain JWT tokens
+    -   `POST /auth/signup`: Register a new user
+    -   `GET /auth/refresh-token`: Refresh the JWT tokens
+    -   `POST /auth/logout`: Invalidate the user session
+-   **Todos**
+
+    -   `GET /todos`: Get all todos for the authenticated user
+    -   `GET /todos/:id`: Get a specific todo by ID
+    -   `POST /todos`: Create a new todo
+    -   `PUT /todos/:id`: Update an existing todo
+    -   `DELETE /todos/:id`: Delete a todo by ID
 
 ## Deployment
 
