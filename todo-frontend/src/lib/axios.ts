@@ -59,7 +59,6 @@ axiosInstance.interceptors.response.use(
         // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error('Token refresh failed', refreshError);
         // Handle refresh token failure, e.g., redirect to login
         // Clear local storage if needed
         localStorage.removeItem('accessToken');

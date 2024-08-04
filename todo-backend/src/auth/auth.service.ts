@@ -19,14 +19,14 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<UserDto | null> {
     // Find user by email
     const user = await this.userService.findOneByEmail(email);
-    const isMatch = await bcrypt.compare(pass, user.password);
 
-    if (user && isMatch) {
+    if (user && (await bcrypt.compare(pass, user.password))) {
       // Return user details excluding password
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
     }
+
     return null;
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
     // Validate user credentials
     const user = await this.validateUser(email, password);
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException();
     }
 
     // Generate access and refresh tokens

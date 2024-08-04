@@ -5,7 +5,6 @@ import {
   Body,
   Request,
   UseGuards,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -16,11 +15,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: { email: string; password: string }) {
-    try {
-      return await this.authService.login(loginDto.email, loginDto.password);
-    } catch (error) {
-      throw new UnauthorizedException();
-    }
+    return await this.authService.login(loginDto.email, loginDto.password);
   }
 
   @Post('signup')

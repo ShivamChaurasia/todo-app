@@ -7,9 +7,13 @@ import React, {
 } from 'react';
 import axios from '../lib/axios';
 
+interface User {
+  email: string;
+}
+
 interface AuthContextProps {
   loading: boolean;
-  user: any;
+  user: User | null;
   login: (email: string, password: string) => Promise<void>;
   signup: (username: string, password: string) => Promise<void>;
   logout: () => void;
@@ -23,12 +27,14 @@ export const AuthContext = createContext<AuthContextProps>({
   logout: () => {},
 });
 
+// Provider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Verify token on mount
   useEffect(() => {
     const verifyToken = async () => {
       const token = localStorage.getItem('accessToken');
@@ -40,9 +46,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
               Authorization: `Bearer ${token}`,
             },
           });
-          setUser(response.data);
+          setUser({ email: response.data.email });
         } catch (error) {
-          console.error('Token verification failed:', error);
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
         } finally {

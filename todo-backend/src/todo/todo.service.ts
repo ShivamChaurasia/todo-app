@@ -49,12 +49,18 @@ export class TodoService {
     userId: number,
   ): Promise<Todo> {
     const todo = await this.findOne(id, userId);
+    if (!todo) {
+      throw new NotFoundException(`Todo with ID ${id} not found`);
+    }
     const updatedTodo = Object.assign(todo, updateTodoDto);
     return this.todoRepository.save(updatedTodo);
   }
 
   async remove(id: number, userId: number): Promise<void> {
     const todo = await this.findOne(id, userId);
+    if (!todo) {
+      throw new NotFoundException(`Todo with ID ${id} not found`);
+    }
     await this.todoRepository.remove(todo);
   }
 }
