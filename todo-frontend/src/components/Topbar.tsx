@@ -16,7 +16,7 @@ const Topbar: React.FC = () => {
   }
 
   return (
-    <header className="bg-primary-200 text-white p-4 flex justify-between items-center shadow">
+    <header className="bg-primary-200 text-white p-4 flex justify-between items-center shadow gap-8 flex-col md:flex-row">
       <AppLogo />
       <div className="flex items-center space-x-4">
         <span className="text-lg text-primary-500">{user?.email}</span>

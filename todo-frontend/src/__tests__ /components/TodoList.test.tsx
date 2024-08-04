@@ -18,7 +18,7 @@ describe('TodoList', () => {
     jest.clearAllMocks();
   });
 
-  test('renders "No todos found" when there are no todos', () => {
+  test('renders "Create your first Todo" when there are no todos', () => {
     render(
       <TodoContext.Provider
         value={{
@@ -32,7 +32,7 @@ describe('TodoList', () => {
       </TodoContext.Provider>,
     );
 
-    expect(screen.getByText('No todos found')).toBeInTheDocument();
+    expect(screen.getByText('Create your first Todo')).toBeInTheDocument();
   });
 
   test('renders todos correctly', () => {

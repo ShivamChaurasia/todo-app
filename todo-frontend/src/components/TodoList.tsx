@@ -7,7 +7,7 @@ const TodoList: React.FC = () => {
   return (
     <div className="mt-8 pt-8 border-t">
       {todos.length === 0 ? (
-        <p>No todos found</p>
+        <p>Create your first Todo</p>
       ) : (
         <h1 className="text-2xl mb-4">Todo List</h1>
       )}

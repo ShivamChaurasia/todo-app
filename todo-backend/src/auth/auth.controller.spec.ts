@@ -4,6 +4,8 @@ import { AuthService } from './auth.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { jest } from '@jest/globals';
 
+const password = 'test-password';
+
 describe('AuthController', () => {
   let authController: AuthController;
   let authService: AuthService;
@@ -31,7 +33,7 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should return a token on successful login', async () => {
-      const loginDto = { email: 'test@example.com', password: 'password' };
+      const loginDto = { email: 'test@example.com', password };
       const result = { accessToken: 'token', refreshToken: 'token' };
 
       jest.spyOn(authService, 'login').mockResolvedValue(result);
@@ -40,7 +42,7 @@ describe('AuthController', () => {
     });
 
     it('should throw UnauthorizedException if login fails', async () => {
-      const loginDto = { email: 'test@example.com', password: 'password' };
+      const loginDto = { email: 'test@example.com', password };
 
       jest
         .spyOn(authService, 'login')
@@ -54,7 +56,7 @@ describe('AuthController', () => {
 
   describe('signup', () => {
     it('should return a token on successful signup', async () => {
-      const signupDto = { email: 'test@example.com', password: 'password' };
+      const signupDto = { email: 'test@example.com', password };
       const result = { accessToken: 'token' };
 
       jest.spyOn(authService, 'signup').mockResolvedValue(result);
@@ -63,7 +65,7 @@ describe('AuthController', () => {
     });
 
     it('should throw UnauthorizedException if signup fails', async () => {
-      const signupDto = { email: 'test@example.com', password: 'password' };
+      const signupDto = { email: 'test@example.com', password };
 
       jest
         .spyOn(authService, 'signup')

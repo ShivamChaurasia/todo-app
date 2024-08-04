@@ -6,6 +6,8 @@ import { UnauthorizedException, ConflictException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AppUser } from '../user/app-user.entity';
 
+const password = 'test-password';
+
 describe('AuthService', () => {
   let authService: AuthService;
   let userService: UserService;
@@ -38,7 +40,6 @@ describe('AuthService', () => {
   describe('login', () => {
     it('should return an access token for valid credentials', async () => {
       const email = 'test@example.com';
-      const password = 'password';
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = { email, password: hashedPassword, id: 1 } as AppUser;
 
@@ -73,7 +74,6 @@ describe('AuthService', () => {
   describe('signup', () => {
     it('should successfully create a user', async () => {
       const email = 'test@example.com';
-      const password = 'password';
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Mock UserService
@@ -106,7 +106,6 @@ describe('AuthService', () => {
 
     it('should throw a ConflictException if the user already exists', async () => {
       const email = 'test@example.com';
-      const password = 'password';
 
       mockUserService.findOneByEmail.mockResolvedValue({} as AppUser);
 
